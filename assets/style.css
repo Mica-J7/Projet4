@@ -107,13 +107,17 @@ header .name {
 }
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+	font-size: 18px;
+	font-weight: 800;
 	color: #fff;
 	background-color: #BEB45A;
-	border-radius:0 ;
+	border-radius: 10px;
 }
 
 .nav-pills .nav-link {
-	color: #000
+	font-size: 18px;
+	color: #000;
+	cursor: pointer;
 }
 
 .item-column {

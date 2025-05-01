@@ -119,82 +119,83 @@
         .attr("src", element.attr("src"));
       $(`#${lightboxId}`).modal("toggle");
     },
+  
     prevImage() {
+      const lightboxImage = document.querySelector(".lightboxImage");
       let activeImage = null;
-      $("img.gallery-item").each(function() {
-        if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
-          activeImage = $(this);
-        }
-      });
-      let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
-      let imagesCollection = [];
-      if (activeTag === "all") {
-        $(".item-column").each(function() {
-          if ($(this).children("img").length) {
-            imagesCollection.push($(this).children("img"));
-          }
-        });
-      } else {
-        $(".item-column").each(function() {
-          if (
-            $(this)
-              .children("img")
-              .data("gallery-tag") === activeTag
-          ) {
-            imagesCollection.push($(this).children("img"));
-          }
-        });
-      }
-      let index = 0,
-        next = null;
 
-      $(imagesCollection).each(function(i) {
-        if ($(activeImage).attr("src") === $(this).attr("src")) {
-          index = i ;
+      // Récupérer toutes les images de la galerie
+      const galleryImages = Array.from(document.querySelectorAll(".item-column img"));
+
+      // Trouver l'image active (celle qui est actuellement affichée dans la lightbox)
+      galleryImages.forEach((img) => {
+        if (img.src === lightboxImage.src) {
+          activeImage = img;
         }
       });
-      next =
-        imagesCollection[index] ||
-        imagesCollection[imagesCollection.length - 1];
-      $(".lightboxImage").attr("src", $(next).attr("src"));
+
+      // Récupérer le tag actif
+      const activeTag = document.querySelector(".tags-bar .active-tag").dataset.imagesToggle;
+
+      // Filtrer les images selon le tag actif => condition ? si vrai : si faux (autre façon de faire un if else)
+      const filteredImages = activeTag === "all" 
+        ? galleryImages  // Si le tag est "Tous", on prend toutes les images
+        : galleryImages.filter((img) => img.dataset.galleryTag === activeTag);  // Sinon, on filtre par tag
+
+      // Trouver l'index de l'image active dans les images filtrées
+      let currentIndex = filteredImages.indexOf(activeImage);
+      
+      // Si l'index est 0, on va à la dernière image de la catégorie filtrée
+      if (currentIndex === 0) {
+        currentIndex = filteredImages.length;
+      }
+
+      // Trouver l'image précédente dans les images filtrées
+      const prevImage = filteredImages[currentIndex - 1];
+
+      // Vérifier si l'image précédente existe avant de changer l'attribut src
+      if (prevImage) {
+        lightboxImage.src = prevImage.src;
+      }
     },
+
     nextImage() {
+      const lightboxImage = document.querySelector(".lightboxImage");
       let activeImage = null;
-      $("img.gallery-item").each(function() {
-        if ($(this).attr("src") === $(".lightboxImage").attr("src")) {
-          activeImage = $(this);
-        }
-      });
-      let activeTag = $(".tags-bar span.active-tag").data("images-toggle");
-      let imagesCollection = [];
-      if (activeTag === "all") {
-        $(".item-column").each(function() {
-          if ($(this).children("img").length) {
-            imagesCollection.push($(this).children("img"));
-          }
-        });
-      } else {
-        $(".item-column").each(function() {
-          if (
-            $(this)
-              .children("img")
-              .data("gallery-tag") === activeTag
-          ) {
-            imagesCollection.push($(this).children("img"));
-          }
-        });
-      }
-      let index = 0,
-        next = null;
 
-      $(imagesCollection).each(function(i) {
-        if ($(activeImage).attr("src") === $(this).attr("src")) {
-          index = i;
+      // Récupérer toutes les images de la galerie
+      const galleryImages = Array.from(document.querySelectorAll(".item-column img"));
+
+      // Trouver l'image active (celle qui est actuellement affichée dans la lightbox)
+      galleryImages.forEach((img) => {
+        if (img.src === lightboxImage.src) {
+          activeImage = img;
         }
       });
-      next = imagesCollection[index] || imagesCollection[0];
-      $(".lightboxImage").attr("src", $(next).attr("src"));
+
+      // Récupérer le tag actif
+      const activeTag = document.querySelector(".tags-bar .active-tag").dataset.imagesToggle;
+
+      // Filtrer les images selon le tag actif => condition ? si vrai : si faux (autre façon de faire un if else)
+      const filteredImages = activeTag === "all" 
+        ? galleryImages  // Si le tag est "Tous", on prend toutes les images
+        : galleryImages.filter((img) => img.dataset.galleryTag === activeTag);  // Sinon, on filtre par tag
+
+      // Trouver l'index de l'image active dans les images filtrées
+      let currentIndex = filteredImages.indexOf(activeImage);
+      
+      // Si l'index est 0, on va à la dernière image de la catégorie filtrée
+      const nextIndex = (currentIndex + 1) % filteredImages.length;
+
+      // Trouver l'image précédente dans les images filtrées
+      const nextImage = filteredImages[nextIndex];
+
+      // Vérifier si l'image précédente existe avant de changer l'attribut src
+      if (nextImage) {
+        lightboxImage.src = nextImage.src;
+      }
     },
+
     createLightBox(gallery, lightboxId, navigation) {
       gallery.append(`<div class="modal fade" id="${
         lightboxId ? lightboxId : "galleryLightbox"
@@ -261,3 +262,10 @@
     }
   };
 })(jQuery);
+
+
+// Test débuggage selection des filtres de la galerie en JS classique.
+
+
+// Test de débuggage des boutons précédent et suivant de la modale de la galerie en JS classique.
+
