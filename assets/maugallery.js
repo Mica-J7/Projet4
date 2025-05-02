@@ -236,27 +236,29 @@
         console.error(`Unknown tags position: ${position}`);
       }
     },
-    filterByTag() {
-      if ($(this).hasClass("active-tag")) {
-        return;
-      }
-      $(".active-tag").removeClass("active active-tag");
-      $(this).addClass("active-tag");
+    
+    filterByTag: function(event) {
+      // Récupère le bouton de filtre cliqué (celui qui déclenche l'événement)
+      const clickedTag = event.currentTarget;
 
-      var tag = $(this).data("images-toggle");
-
-      $(".gallery-item").each(function() {
-        $(this)
-          .parents(".item-column")
-          .hide();
-        if (tag === "all") {
-          $(this)
-            .parents(".item-column")
-            .show(300);
-        } else if ($(this).data("gallery-tag") === tag) {
-          $(this)
-            .parents(".item-column")
-            .show(300);
+      // Sélectionne tous les filtres (les <span> dans la barre de navigation)
+      const tagList = document.querySelectorAll(".nav-item span");
+      const allImages = document.querySelectorAll(".gallery-item");
+    
+      tagList.forEach(t => t.classList.remove("active", "active-tag"));
+      clickedTag.classList.add("active", "active-tag");
+      
+      // Récupère le tag sélectionné via l'attribut data-images-toggle
+      const selectedTag = clickedTag.dataset.imagesToggle;
+    
+      allImages.forEach(image => {
+        const imageTag = image.dataset.galleryTag;
+        const imageColumn = image.closest(".item-column");
+    
+        if (selectedTag === "all" || imageTag === selectedTag) {
+          imageColumn.style.display = "";
+        } else {
+          imageColumn.style.display = "none";
         }
       });
     }
@@ -266,6 +268,6 @@
 
 // Test débuggage selection des filtres de la galerie en JS classique.
 
-
-// Test de débuggage des boutons précédent et suivant de la modale de la galerie en JS classique.
-
+// Le problème venait du addEventListener dans filterByTag. On faisait deja un .on click en jQuery pour appeler filterByTag qui ajoutait donc
+// un event listener avant de fonctionner normalement. Cela faisait un clique "dans le vide" avant de fonctionner lors de la selection 
+// de la catégorie. Plus d'event listener dans filterByTag, plus de souci.
