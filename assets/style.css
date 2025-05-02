@@ -108,10 +108,9 @@ header .name {
 
 .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
 	font-size: 18px;
-	font-weight: 800;
-	color: #fff;
-	background-color: #BEB45A;
-	border-radius: 10px;
+	color: white;
+	background-color: #7A6F1E;
+	border-radius: 5px;
 }
 
 .nav-pills .nav-link {
@@ -138,6 +137,7 @@ header .name {
 	height: 100%;
 	object-fit: cover;
 	padding: .5em;
+	cursor: pointer;
 }
 
 .mg-prev, .mg-next {
