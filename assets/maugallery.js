@@ -124,36 +124,28 @@
       const lightboxImage = document.querySelector(".lightboxImage");
       let activeImage = null;
 
-      // Récupérer toutes les images de la galerie
       const galleryImages = Array.from(document.querySelectorAll(".item-column img"));
 
-      // Trouver l'image active (celle qui est actuellement affichée dans la lightbox)
       galleryImages.forEach((img) => {
         if (img.src === lightboxImage.src) {
           activeImage = img;
         }
       });
 
-      // Récupérer le tag actif
       const activeTag = document.querySelector(".tags-bar .active-tag").dataset.imagesToggle;
 
-      // Filtrer les images selon le tag actif => condition ? si vrai : si faux (autre façon de faire un if else)
       const filteredImages = activeTag === "all" 
-        ? galleryImages  // Si le tag est "Tous", on prend toutes les images
-        : galleryImages.filter((img) => img.dataset.galleryTag === activeTag);  // Sinon, on filtre par tag
+        ? galleryImages 
+        : galleryImages.filter((img) => img.dataset.galleryTag === activeTag);
 
-      // Trouver l'index de l'image active dans les images filtrées
       let currentIndex = filteredImages.indexOf(activeImage);
       
-      // Si l'index est 0, on va à la dernière image de la catégorie filtrée
       if (currentIndex === 0) {
         currentIndex = filteredImages.length;
       }
 
-      // Trouver l'image précédente dans les images filtrées
       const prevImage = filteredImages[currentIndex - 1];
 
-      // Vérifier si l'image précédente existe avant de changer l'attribut src
       if (prevImage) {
         lightboxImage.src = prevImage.src;
       }
@@ -163,34 +155,26 @@
       const lightboxImage = document.querySelector(".lightboxImage");
       let activeImage = null;
 
-      // Récupérer toutes les images de la galerie
       const galleryImages = Array.from(document.querySelectorAll(".item-column img"));
 
-      // Trouver l'image active (celle qui est actuellement affichée dans la lightbox)
       galleryImages.forEach((img) => {
         if (img.src === lightboxImage.src) {
           activeImage = img;
         }
       });
 
-      // Récupérer le tag actif
       const activeTag = document.querySelector(".tags-bar .active-tag").dataset.imagesToggle;
 
-      // Filtrer les images selon le tag actif => condition ? si vrai : si faux (autre façon de faire un if else)
       const filteredImages = activeTag === "all" 
-        ? galleryImages  // Si le tag est "Tous", on prend toutes les images
-        : galleryImages.filter((img) => img.dataset.galleryTag === activeTag);  // Sinon, on filtre par tag
+        ? galleryImages 
+        : galleryImages.filter((img) => img.dataset.galleryTag === activeTag);
 
-      // Trouver l'index de l'image active dans les images filtrées
       let currentIndex = filteredImages.indexOf(activeImage);
       
-      // Si l'index est 0, on va à la dernière image de la catégorie filtrée
       const nextIndex = (currentIndex + 1) % filteredImages.length;
 
-      // Trouver l'image précédente dans les images filtrées
       const nextImage = filteredImages[nextIndex];
 
-      // Vérifier si l'image précédente existe avant de changer l'attribut src
       if (nextImage) {
         lightboxImage.src = nextImage.src;
       }
@@ -238,17 +222,14 @@
     },
     
     filterByTag: function(event) {
-      // Récupère le bouton de filtre cliqué (celui qui déclenche l'événement)
       const clickedTag = event.currentTarget;
 
-      // Sélectionne tous les filtres (les <span> dans la barre de navigation)
       const tagList = document.querySelectorAll(".nav-item span");
       const allImages = document.querySelectorAll(".gallery-item");
     
       tagList.forEach(t => t.classList.remove("active", "active-tag"));
       clickedTag.classList.add("active", "active-tag");
       
-      // Récupère le tag sélectionné via l'attribut data-images-toggle
       const selectedTag = clickedTag.dataset.imagesToggle;
     
       allImages.forEach(image => {
@@ -264,10 +245,3 @@
     }
   };
 })(jQuery);
-
-
-// Test débuggage selection des filtres de la galerie en JS classique.
-
-// Le problème venait du addEventListener dans filterByTag. On faisait deja un .on click en jQuery pour appeler filterByTag qui ajoutait donc
-// un event listener avant de fonctionner normalement. Cela faisait un clique "dans le vide" avant de fonctionner lors de la selection 
-// de la catégorie. Plus d'event listener dans filterByTag, plus de souci.
